@@ -33,7 +33,7 @@ const navItems = [
   <div class="layout-shell">
     <aside class="layout-side">
       <div class="brand">
-        <div class="brand-title">武汉中烟</div>
+        <div class="brand-title">湖北中烟</div>
         <div class="brand-subtitle">历史数据分析系统</div>
       </div>
       <nav class="menu-list">
