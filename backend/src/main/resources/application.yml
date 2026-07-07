@@ -1,0 +1,47 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: historical-analysis-backend
+  datasource:
+    url: jdbc:postgresql://${HBZY_DB_HOST:localhost}:${HBZY_DB_PORT:5432}/${HBZY_DB_NAME:hbzy}
+    username: ${HBZY_DB_USERNAME:postgres}
+    password: ${HBZY_DB_PASSWORD:123456}
+    driver-class-name: org.postgresql.Driver
+  sql:
+    init:
+      mode: never
+  jackson:
+    time-zone: Asia/Shanghai
+    date-format: yyyy-MM-dd HH:mm:ss
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.nologging.NoLoggingImpl
+  global-config:
+    banner: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+
+app:
+  system:
+    name: 武汉中烟历史数据分析系统
+    version: 0.0.1
+  business:
+    process-id: 1
+    process-code: PROC_DRY
+    process-name: 叶丝干燥工序

@@ -1,0 +1,18 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:hbzytest;MODE=PostgreSQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  sql:
+    init:
+      mode: always
+
+app:
+  system:
+    name: 武汉中烟历史数据分析系统
+    version: test
+  business:
+    process-id: 1
+    process-code: PROC_DRY
+    process-name: 叶丝干燥工序

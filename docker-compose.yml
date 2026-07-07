@@ -1,0 +1,17 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: hbzy-postgres
+    environment:
+      POSTGRES_DB: hbzy
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123456
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./backend/src/main/resources/sql/postgresql/hbzy_schema.sql:/docker-entrypoint-initdb.d/01_hbzy_schema.sql
+    restart: unless-stopped
+
+volumes:
+  pgdata:
