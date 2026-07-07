@@ -38,7 +38,7 @@ class HistoricalAnalysisApplicationTests {
         mockMvc.perform(get("/api/demo/overview"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.code").value(200))
-            .andExpect(jsonPath("$.data.processCount").value(1))
+            .andExpect(jsonPath("$.data.processCount").value(greaterThanOrEqualTo(3)))
             .andExpect(jsonPath("$.data.variableCount").value(2))
             .andExpect(jsonPath("$.data.batchCount").value(3));
     }
@@ -46,7 +46,9 @@ class HistoricalAnalysisApplicationTests {
     @Test
     void batchDetailShouldReturnFormalSummary() throws Exception {
         // 批次分析页依赖的批次详情接口必须返回正式库聚合后的摘要信息。
-        mockMvc.perform(get("/api/demo/batch-detail").param("batchId", "BATCH-A-001"))
+        mockMvc.perform(get("/api/demo/batch-detail")
+                .param("processId", "1")
+                .param("batchId", "BATCH-A-001"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.code").value(200))
             .andExpect(jsonPath("$.data.batchCode").value("BATCH-A-001"))
@@ -57,6 +59,7 @@ class HistoricalAnalysisApplicationTests {
     void trendShouldReturnPointsWithOutlierFlags() throws Exception {
         // 趋势接口需要返回时序点，并能标识统计异常点。
         mockMvc.perform(get("/api/demo/trend")
+                .param("processId", "1")
                 .param("batchId", "BATCH-A-001")
                 .param("variableId", "P001"))
             .andExpect(status().isOk())

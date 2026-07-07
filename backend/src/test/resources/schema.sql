@@ -4,6 +4,7 @@ DROP TABLE IF EXISTS fact_process_metric_value;
 
 CREATE TABLE dim_process_metric (
     id BIGINT PRIMARY KEY,
+    process_id BIGINT NOT NULL,
     metric_code VARCHAR(32) NOT NULL,
     metric_name VARCHAR(255) NOT NULL,
     source_column_name VARCHAR(255),
@@ -13,6 +14,7 @@ CREATE TABLE dim_process_metric (
 
 CREATE TABLE ads_batch_metric_stat (
     id BIGINT PRIMARY KEY,
+    process_id BIGINT NOT NULL,
     import_run_id VARCHAR(64) NOT NULL,
     source_file VARCHAR(255) NOT NULL,
     batch_no VARCHAR(128),
@@ -31,6 +33,7 @@ CREATE TABLE ads_batch_metric_stat (
 
 CREATE TABLE fact_process_metric_value (
     id BIGINT PRIMARY KEY,
+    process_id BIGINT NOT NULL,
     import_run_id VARCHAR(64) NOT NULL,
     source_file VARCHAR(255) NOT NULL,
     source_sheet VARCHAR(128),

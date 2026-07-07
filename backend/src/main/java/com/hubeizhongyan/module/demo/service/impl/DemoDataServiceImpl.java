@@ -122,6 +122,30 @@ public class DemoDataServiceImpl implements DemoDataService {
                 batchId
             );
         }
+        List<VariableOptionResponse> variablesWithStatistics = jdbcTemplate.query(
+            """
+            SELECT s.metric_code,
+                   COALESCE(MAX(s.metric_name), MAX(m.metric_name), s.metric_code) AS metric_name,
+                   MIN(COALESCE(m.metric_order, m.id, 999999)) AS sort_order
+            FROM ads_batch_metric_stat s
+            LEFT JOIN dim_process_metric m
+              ON m.process_id = s.process_id
+             AND m.metric_code = s.metric_code
+            WHERE s.process_id = ?
+            GROUP BY s.metric_code
+            ORDER BY sort_order, s.metric_code
+            """,
+            (rs, rowNum) -> VariableOptionResponse.builder()
+                .id(rs.getString("metric_code"))
+                .variableName(rs.getString("metric_name"))
+                .unit(definition.processName())
+                .build(),
+            processId
+        );
+        if (!variablesWithStatistics.isEmpty()) {
+            return variablesWithStatistics;
+        }
+
         return jdbcTemplate.query(
             """
             SELECT metric_code, metric_name
@@ -493,13 +517,35 @@ public class DemoDataServiceImpl implements DemoDataService {
     }
 
     private String queryMetricName(Long processId, String metricCode) {
-        String metricName = jdbcTemplate.queryForObject(
-            "SELECT metric_name FROM dim_process_metric WHERE process_id = ? AND metric_code = ?",
+        List<String> metricNames = jdbcTemplate.queryForList(
+            """
+            SELECT metric_name
+            FROM (
+                SELECT metric_name, 1 AS sort_order
+                FROM dim_process_metric
+                WHERE process_id = ? AND metric_code = ?
+                UNION ALL
+                SELECT metric_name, 2 AS sort_order
+                FROM ads_batch_metric_stat
+                WHERE process_id = ? AND metric_code = ?
+                UNION ALL
+                SELECT metric_name, 3 AS sort_order
+                FROM fact_process_metric_value
+                WHERE process_id = ? AND metric_code = ?
+            ) t
+            WHERE metric_name IS NOT NULL
+            ORDER BY sort_order
+            LIMIT 1
+            """,
             String.class,
+            processId,
+            metricCode,
+            processId,
+            metricCode,
             processId,
             metricCode
         );
-        return metricName == null ? metricCode : metricName;
+        return metricNames.isEmpty() ? metricCode : metricNames.get(0);
     }
 
     private BusinessProcessDefinition resolveProcessByBatch(String batchId) {
