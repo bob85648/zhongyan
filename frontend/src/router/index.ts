@@ -10,6 +10,7 @@
  */
 import { createRouter, createWebHistory } from 'vue-router'
 import BatchAnalysisView from '@/views/batches/BatchAnalysisView.vue'
+import DataGovernanceView from '@/views/governance/DataGovernanceView.vue'
 import HomeView from '@/views/home/HomeView.vue'
 import ImportView from '@/views/imports/ImportView.vue'
 import LayoutView from '@/views/layout/LayoutView.vue'
@@ -58,6 +59,15 @@ const router = createRouter({
           meta: {
             title: '导入任务',
             description: '上传演示文件并生成新的批次、时序点和统计结果。',
+          },
+        },
+        {
+          path: 'data-governance',
+          name: 'data-governance',
+          component: DataGovernanceView,
+          meta: {
+            title: '数据治理',
+            description: '查看数据资产、质量评分、规则命中和整改任务，快速掌握历史生产数据治理状态。',
           },
         },
         {

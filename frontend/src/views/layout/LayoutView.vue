@@ -23,6 +23,7 @@ const navItems = [
   { label: '批次分析', to: '/batches' },
   { label: '质量分析', to: '/quality' },
   { label: '导入任务', to: '/imports' },
+  { label: '数据治理', to: '/data-governance' },
   { label: '工序管理', to: '/process-management' },
   { label: '数据类别管理', to: '/variable-management' },
 ]
